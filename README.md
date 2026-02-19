@@ -1,4 +1,4 @@
-# 🚀 n8n Automation Vault
+# 🚀 N8n Automation Vault
 
 This repository contains my custom n8n workflows for utility bots and AI agents.
 
