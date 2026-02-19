@@ -1,0 +1,1300 @@
+{
+  "name": "Reflect AI",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        608
+      ],
+      "id": "33a9ae42-a21f-4ca0-8fe3-59fc4a9eb0ec",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "TeIKWHzTUQodzttZ",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2448,
+        352
+      ],
+      "id": "d0ba9ba1-c840-4bab-942c-374cc41a4880",
+      "name": "Send a text message",
+      "webhookId": "1cdbaf94-0664-4249-8de5-9495b66c3b41",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.message.chat.id }}",
+        "text": "Chat Cleared",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        528
+      ],
+      "id": "c2dc8dba-d438-453b-bae2-290bd5806fcc",
+      "name": "Send a text message2",
+      "webhookId": "e44b0009-dafa-4091-90af-ff1ad4f4dd44",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1392,
+        -128
+      ],
+      "id": "a4a7c95e-6b80-441b-aaff-4915df889ae9",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.from.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1632,
+        -144
+      ],
+      "id": "9e4e59e1-cb63-4410-841c-48a144d2c9b8",
+      "name": "Send a document",
+      "webhookId": "dcd4dbe0-45a1-411a-9992-fdd2908c0a51",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "binaryPropertyName": "=Json_file",
+        "destinationKey": "hist",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        864
+      ],
+      "id": "ddc45fad-78b2-4ae6-ba57-ba6325040cb1",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "user",
+              "message": "={{ $json.human }}"
+            },
+            {
+              "type": "ai",
+              "message": "={{ $json.ai }}"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        848,
+        800
+      ],
+      "id": "12f970b6-6916-49f4-ade1-e4361dadf029",
+      "name": "Chat Memory Manager2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "hist[0].messages",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        608,
+        864
+      ],
+      "id": "a60338a0-9e01-4e99-b05d-d31679712629",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.message.chat.id }}",
+        "text": "Import Success",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1728,
+        768
+      ],
+      "id": "37232b4f-768f-4461-a8f7-fcc4deae1d63",
+      "name": "Send a text message3",
+      "webhookId": "7c59add3-dbb0-4ced-a9d8-eb6b9182a4bc",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        2016,
+        864
+      ],
+      "id": "29f6fffd-fc18-45c4-9a61-2f2abfeb9d30",
+      "name": "Chat Memory Manager3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        736
+      ],
+      "id": "566f6532-638a-40d9-a366-1187805049be",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.message.chat.id }}",
+        "text": "=Hello! I am ReflectAi bot, your digital mirror.\n\nI don't give advice or answers. Instead, I help you unspool your own thoughts by asking simple, clarifying questions.\n\nHow to use me:\n1. Tell me what's on your mind.\n2. Answer my questions to dive deeper.\n3. Reflect until you find your own clarity.\n\nType /options or Press below Button at any time to manage your memory or export your session.",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Options",
+                    "additionalFields": {
+                      "callback_data": "/options"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1488,
+        80
+      ],
+      "id": "7e89146d-d73d-4085-a3a3-e208ebf562eb",
+      "name": "Send a text message4",
+      "webhookId": "b559d22a-4c17-485c-8921-4d6df5a00c1b",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.messages }}",
+        "options": {
+          "systemMessage": "\"You are a summary assistant. Review the following Socratic reflection session and summarize the key insights, main themes, and final conclusions  reached by the user into a clean HTML report. Do not use complex tables or nested brackets. Keep it structured and professional.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1168,
+        -464
+      ],
+      "id": "f8ae3c1c-d757-42a8-aeb6-f7b042883906",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.message.chat.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "Reflection_Summary.md",
+        "additionalFields": {
+          "fileName": "Reflection_Summary.html"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2176,
+        -336
+      ],
+      "id": "537410fe-c1b2-41df-8882-6658f7c45011",
+      "name": "Send a document1",
+      "webhookId": "90c7a5d3-90d9-46f3-aa56-1a7d5676f10c",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html",
+        "binaryPropertyName": "Reflection_Summary.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1872,
+        -336
+      ],
+      "id": "6ae53e99-65c2-4e01-9f5f-7d0426b7068a",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const summary = $input.first().json.output; \nconst date = new Date().toLocaleDateString('en-IN');\nconst userId = $('Telegram Trigger Starting Point').first().json.callback_query.from.id;\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap\" rel=\"stylesheet\">\n    <style>\n        :root {\n            --primary: #1a73e8;\n            --text-main: #202124;\n            --text-light: #5f6368;\n            --bg: #f8f9fa;\n            --card: #ffffff;\n        }\n        body { \n            font-family: 'Inter', sans-serif; \n            background-color: var(--bg); \n            color: var(--text-main); \n            line-height: 1.7; \n            padding: 20px;\n            margin: 0;\n        }\n        .container { \n            max-width: 650px; \n            margin: 40px auto; \n            background: var(--card); \n            padding: 50px; \n            border-radius: 16px; \n            box-shadow: 0 10px 25px rgba(0,0,0,0.05); \n        }\n        h1 { \n            font-family: 'Playfair Display', serif;\n            font-size: 32px; \n            color: var(--text-main); \n            margin-bottom: 8px;\n            letter-spacing: -0.5px;\n        }\n        .meta { \n            font-size: 13px; \n            text-transform: uppercase;\n            letter-spacing: 1px;\n            color: var(--text-light); \n            margin-bottom: 40px;\n            border-bottom: 1px solid #eee;\n            padding-bottom: 20px;\n        }\n        .meta strong { color: var(--primary); }\n        \n        /* AI Content Styling */\n        .content h1, .content h2 { \n            font-family: 'Inter', sans-serif;\n            color: var(--primary); \n            font-size: 20px; \n            margin-top: 30px;\n            font-weight: 600;\n        }\n        .content p { margin-bottom: 20px; font-size: 16px; }\n        .content ul { padding-left: 20px; margin-bottom: 20px; }\n        .content li { margin-bottom: 10px; }\n        \n        .footer { \n            margin-top: 60px; \n            font-size: 12px; \n            text-align: center; \n            color: var(--text-light); \n            border-top: 1px solid #eee; \n            padding-top: 30px; \n        }\n        .footer em { font-family: 'Playfair Display', serif; font-size: 14px; }\n        \n        @media (max-width: 600px) {\n            .container { padding: 30px 20px; margin: 10px auto; }\n            h1 { font-size: 26px; }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Reflection Summary</h1>\n        <div class=\"meta\">Session: <strong>#${userId}</strong> &nbsp; | &nbsp; ${date}</div>\n        \n        <div class=\"content\">\n            ${summary}\n        </div>\n\n        <div class=\"footer\">\n            Designed for Clarity • Created By Hk<br><br>\n            <em>\"The unexamined life is not worth living.\"</em>\n        </div>\n    </div>\n</body>\n</html>\n`;\n\nreturn { html: htmlContent };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        -432
+      ],
+      "id": "073c09c9-fa32-4976-863f-509280ec0fa6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.message.chat.id }}{{ $('Telegram Trigger Starting Point').item.json.callback_query.from.id }}",
+        "text": "Please Select from Following Options : ",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Clear Memory & Reset",
+                    "additionalFields": {
+                      "callback_data": "/delmem"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Export Chat",
+                    "additionalFields": {
+                      "callback_data": "/export"
+                    }
+                  },
+                  {
+                    "text": "Import Chat",
+                    "additionalFields": {
+                      "callback_data": "/import"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Export HTML File",
+                    "additionalFields": {
+                      "callback_data": "/exporthtml"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        -400
+      ],
+      "id": "00b158c7-9ddd-4ca8-bfb8-1be7f2a015e7",
+      "name": "Options Message",
+      "webhookId": "af7d66a0-fe4f-4d64-8193-8d90316c6818",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.message.text }}",
+                    "rightValue": "/options",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e2dcd918-1cf5-4b27-8016-d9f6c9ff480e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d3ef9521-57fa-4670-9d74-c720fbc350b1",
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.data }}",
+                    "rightValue": "/options",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "babd5a0f-8ad1-4c9e-a59a-f462d3100d89",
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.data }}",
+                    "rightValue": "/delmem",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "35eb6028-de12-4efb-ab17-b93acdabe77b",
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.data }}",
+                    "rightValue": "/export",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3818274d-9d1c-473a-ad67-1e836f256b5f",
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.data }}",
+                    "rightValue": "/import",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e12bc69b-6c74-4e28-a162-7779ef193b24",
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.data }}",
+                    "rightValue": "/exporthtml",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "542253df-2dbf-4bd0-84a9-da5f3ed7b697",
+                    "leftValue": "={{ $('Telegram Trigger Starting Point').item.json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ff926da2-d342-4350-aa17-01e46cbc3d4b",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        368,
+        128
+      ],
+      "id": "6bb2ee6e-5b32-455b-98a0-50d5c21cb9ff",
+      "name": "Most Imp Part. Different Messages to different Paths"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        192
+      ],
+      "id": "6eaaeed3-c27d-438b-8996-ecba0898b13f",
+      "name": "Telegram Trigger Starting Point",
+      "webhookId": "fd5ac87e-4a2e-4fd0-8474-a47876d3f806",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger Starting Point').item.json.message.chat.id }}{{ $('Telegram Trigger Starting Point').item.json.callback_query.from.id }}",
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        1120
+      ],
+      "id": "7aa85ae4-1b88-497b-a23c-d2a94ddb867a",
+      "name": "Simple Memory. Contains Everything"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -176
+      ],
+      "id": "b04bd07b-fdf9-4995-b583-16cc717095c0",
+      "name": "Export HTML"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        992,
+        32
+      ],
+      "id": "c6db4086-0198-4e9e-8053-8ff56caa5972",
+      "name": "Export JSON"
+    },
+    {
+      "parameters": {
+        "mode": "delete",
+        "deleteMode": "all"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        688
+      ],
+      "id": "da73af23-890a-4c35-8c9c-82b257cbe1ac",
+      "name": "Clear History"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.callback_query.message.chat.id }}",
+        "message": "Please Attach Reflect AI Bot Json File :",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Json file",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".json"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        672
+      ],
+      "id": "00da25d6-c5d4-49f2-9245-bc1678a22308",
+      "name": "Import JSON",
+      "webhookId": "8663188f-c4f9-43b5-ae7f-eceab48d6f90",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger Starting Point').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=Role: Reflect@i_bot (Socratic Mirror).\nObjective: Ask 1 simple 5W question to clarify thoughts. <20 words.\n\nRules:\n1. Identify: On first turn, say: \"I see you're {{ $('Telegram Trigger Starting Point').item.json.message.from.first_name }}, is that what you'd like me to call you?\"\n2. Context: Once confirmed, use {{ $('Telegram Trigger Starting Point').item.json.message.from.first_name }} occasionally.\n3. 5Ws: Prioritize What/Why/How/When/Where. \n4. Problems: Ask about roadblocks once the goal is clear.\n5. Stuck: If stuck, ask: \"What's an alternate view, {{ $('Telegram Trigger Starting Point').item.json.message.from.first_name }}?\" \n6. Hints: After 2 turns stuck, give 1 tiny non-directive hint.\n7. No Advice: User does 100% of the thinking."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1856,
+        240
+      ],
+      "id": "0fc5fdcb-b349-47f4-800b-89410f82d10e",
+      "name": "Main AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        272
+      ],
+      "id": "d630268b-5958-43a6-9024-95b4bd5284ea",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.message.chat.id }}{{ $json.callback_query.from.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        192
+      ],
+      "id": "0d2acf9e-aaed-46a1-bd5f-87eee2c3a55e",
+      "name": "Send a chat action",
+      "webhookId": "c823653f-bb74-4c38-9cd4-d85ca51ba8dc",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.message.from.id }}",
+        "text": "={{ $('Telegram Trigger Starting Point').item.json.message.from.first_name }}, our reflection is getting quite deep. We are at {{ $json.messagesCount }}/50 messages. You might want to /export our progress soon to keep these insights safe",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1568,
+        240
+      ],
+      "id": "5982b3ad-fcba-4c77-a89b-a10b8bf0b87b",
+      "name": "Send a text message1",
+      "webhookId": "8de667ee-fe8c-4ed0-b5aa-5bcc057c988d",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "24525deb-c53d-4fc9-817a-f46f74da7cf3",
+              "leftValue": "={{ $json.messagesCount }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1232,
+        368
+      ],
+      "id": "46231699-bac6-4db2-807d-1d5e06bccab1",
+      "name": "New Check"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8b8872cf-b55c-4d53-9e3a-2d12456b2e93",
+              "leftValue": "={{ $json.messagesCount }}",
+              "rightValue": 45,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1408,
+        480
+      ],
+      "id": "0141f119-2e32-490d-b7e8-cdd20527595b",
+      "name": "45+ Check"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the output text from the previous AI node\nlet text = $json.output || \"\";\n\n/**\n * Sanitize for HTML Mode:\n * This replaces characters that Telegram's HTML parser uses.\n */\nfunction sanitizeHTML(str) {\n  return str\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// Create a clean version of the text\nconst cleanText = sanitizeHTML(text);\n\nreturn {\n  output: cleanText\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2224,
+        288
+      ],
+      "id": "f926512b-1921-4c17-8d42-363a41b48834",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger Starting Point').item.json.message.chat.id }}",
+        "text": "=Hello! I am ReflectAi bot, your digital mirror.\n\nI don't give advice or answers. Instead, I help you unspool your own thoughts by asking simple, clarifying questions.\n\nHow to use me:\n1. Tell me what's on your mind.\n2. Answer my questions to dive deeper.\n3. Reflect until you find your own clarity.\n\nType /options or Press below Button at any time to manage your memory or export your session.",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Options",
+                    "additionalFields": {
+                      "callback_data": "/options"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        -384
+      ],
+      "id": "07c169be-7e79-4f70-bc9c-526f07dd6647",
+      "name": "Send a text message5",
+      "webhookId": "b559d22a-4c17-485c-8921-4d6df5a00c1b",
+      "credentials": {
+        "telegramApi": {
+          "id": "t537jHEz91SLitL2",
+          "name": "Reflect AI"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Main AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory Manager2": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory Manager2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message3": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory Manager3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send a text message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message4": {
+      "main": [
+        [
+          {
+            "node": "Main AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "Send a document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Options Message": {
+      "main": [
+        []
+      ]
+    },
+    "Most Imp Part. Different Messages to different Paths": {
+      "main": [
+        [
+          {
+            "node": "Options Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Options Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clear History",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Export JSON",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Import JSON",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Export HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger Starting Point": {
+      "main": [
+        [
+          {
+            "node": "Send a chat action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory. Contains Everything": {
+      "ai_memory": [
+        [
+          {
+            "node": "Main AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Clear History",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Export JSON",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Chat Memory Manager2",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Chat Memory Manager3",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Export HTML",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export HTML": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export JSON": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear History": {
+      "main": [
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Import JSON": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "New Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a chat action": {
+      "main": [
+        [
+          {
+            "node": "Most Imp Part. Different Messages to different Paths",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message1": {
+      "main": [
+        [
+          {
+            "node": "Main AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Check": {
+      "main": [
+        [
+          {
+            "node": "Send a text message4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "45+ Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "45+ Check": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Main AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "a0a3c305-6c22-4ac5-9193-c424798a46d4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3a50395b3ad97e791d9560c02c38e34558c44b042e65f7a7158c32fd9a4c7379"
+  },
+  "id": "EX71EvGBu9v34NxcAZ0GY",
+  "tags": []
+}

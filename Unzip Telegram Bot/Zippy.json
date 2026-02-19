@@ -1,0 +1,368 @@
+{
+  "name": "Zippy",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "571fe42f-e991-425f-8277-2129e7820a99",
+      "name": "Telegram Trigger",
+      "webhookId": "e57531ec-0ded-4e18-90fb-4718e7e74c91",
+      "credentials": {
+        "telegramApi": {
+          "id": "x5KLp2mETyBHOxZu",
+          "name": "Zip Zippy Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.document.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "299bee4f-02b9-47db-bebe-1f52d172c9f7",
+      "name": "Get a file",
+      "webhookId": "6fc541aa-d2f1-44f4-92ac-238a9b105f82",
+      "credentials": {
+        "telegramApi": {
+          "id": "x5KLp2mETyBHOxZu",
+          "name": "Zip Zippy Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "outputPrefix": "unzip"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "70f72152-2a83-448a-bb01-89633557e085",
+      "name": "Compression"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "binaryPropertyName": "={{ Object.keys($binary)[0] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        0
+      ],
+      "id": "e8d419f2-2887-44a3-a344-2aaaa5993ae5",
+      "name": "Send a document",
+      "webhookId": "ca156137-6264-47b6-8c27-1820a68b2045",
+      "credentials": {
+        "telegramApi": {
+          "id": "x5KLp2mETyBHOxZu",
+          "name": "Zip Zippy Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "$binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        832,
+        0
+      ],
+      "id": "5e469909-b71a-4ed7-8501-b277c5e0cf1c",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f38b4327-b51f-4d8a-9341-26486cd669c6",
+              "leftValue": "={{ parseInt($binary[Object.keys($binary)[0]].fileSize) }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "14f6ada7-b09d-4df4-b13f-f17957f37f7f",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "6d349a37-2a45-4540-b7b2-7c8a9b7e1d54"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "75a04bec-b048-4e8e-af5c-965e4f100b4a",
+                    "leftValue": "={{ $json.message.document.file_name }}",
+                    "rightValue": ".zip",
+                    "operator": {
+                      "type": "string",
+                      "operation": "endsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3153af22-a8c9-4885-8ea5-727a7a0de2b3",
+                    "leftValue": "={{ $json.message.document.file_name }}",
+                    "rightValue": ".zip",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notStartsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "fe9709fc-8df6-4081-957a-ab62bef8ab3a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "I'm just a Simple Bot to unzip your files. Just send .zip file to use me... :D",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -176
+      ],
+      "id": "8e09608a-4a46-4699-aa6d-b29c991cfbc6",
+      "name": "Send a text message",
+      "webhookId": "5c803e29-0a28-4ef0-b10b-c73c3e1a1381",
+      "credentials": {
+        "telegramApi": {
+          "id": "x5KLp2mETyBHOxZu",
+          "name": "Zip Zippy Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Heeyyy... I'm Only for .zip files and not for any random file. Please feed me with some .zip file.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        176
+      ],
+      "id": "a1b4ed8c-ef4b-41f2-8655-99613a5f2986",
+      "name": "Send a text message1",
+      "webhookId": "a54b3631-9bcd-4e49-8f03-eb70cc62d75a",
+      "credentials": {
+        "telegramApi": {
+          "id": "x5KLp2mETyBHOxZu",
+          "name": "Zip Zippy Bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Compression",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compression": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a document": {
+      "main": [
+        []
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "baf06477-7ff2-48dc-9dcd-7060d29453f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3a50395b3ad97e791d9560c02c38e34558c44b042e65f7a7158c32fd9a4c7379"
+  },
+  "id": "upJw9anMnc52YFoFrYP51",
+  "tags": []
+}
