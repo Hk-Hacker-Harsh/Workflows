@@ -1,0 +1,232 @@
+{
+  "name": "Blog Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fe601e6b-8212-4466-af79-9f9be832bfa8",
+      "name": "Telegram Trigger",
+      "webhookId": "49ada7cc-9386-47b5-81ed-c90a6a2d7267",
+      "credentials": {
+        "telegramApi": {
+          "id": "OAdTiOlzoPukGFjc",
+          "name": "Hk Blog Post"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        256,
+        288
+      ],
+      "id": "2b85fece-cb6e-488b-991d-771817333eb1",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "TeIKWHzTUQodzttZ",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Title AI Agent').item.json.output }}",
+        "additionalFields": {
+          "authorId": 4,
+          "content": "={{ $json.data }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        0
+      ],
+      "id": "cd7f3ea0-ab16-4bcc-9321-8b014ece7bad",
+      "name": "Create a post",
+      "credentials": {
+        "wordpressApi": {
+          "id": "FpOx4YJgzKBvGlco",
+          "name": "Wordpress - Blogs Author"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Done !!\nPlease Check : {{ $json.link }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1312,
+        0
+      ],
+      "id": "2f28167d-91f2-47a9-9f2c-0f0b0d60a060",
+      "name": "Send a text message",
+      "webhookId": "01fcd5c4-6757-4231-9ee0-287d582b34b5",
+      "credentials": {
+        "telegramApi": {
+          "id": "OAdTiOlzoPukGFjc",
+          "name": "Hk Blog Post"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Blog Post Content : {{ $json.message.text }}\nWrite a simple title which is relevant for this ccontent",
+        "options": {
+          "systemMessage": "You are a high-end SEO specialist and Technical Copywriter for a Developer Blog.\nI'm a CEH Certified CyberSecurity Engineer and a Data Science Student who loves AI and Automation.\nYour goal is to generate one single, high-impact, SEO-friendly, casual and meaningful with content title for a blog post based on the provided content.\n\nSTRICT CONSTRAINTS:\n1. Output ONLY the title text. \n2. NO conversational filler, NO quotes, NO \"Here is your title:\", and NO markdown formatting (unless specifically required for a code-style title).\n3. Keywords: Prioritize technical terms if relevant to the content.\n4. Tone: Casual, technical, and intriguing.\n5. Length: Keep it between 40-60 characters for maximum Google Search visibility.\n\n\nIf the content is about a project, use an action-oriented title. If it is a tutorial, use a \"How-to\" or \"Guide\" format."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "7362530f-6c11-4401-bdc6-0389e9b74ec2",
+      "name": "Title AI Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Convert this to blog post content : {{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "You are a Gen Z Tech Creator and Cybersecurity Researcher. \nYour task is to transform a raw thought or link into a high-energy, SEO-friendly blog post.\n\nSTRICT CONSTRAINTS:\n1. OUTPUT: Only the Markdown content. No \"Here is your post,\" no conversational filler.\n2. STYLE: Casual, slightly chaotic but smart, and Gen Z \n3. STRUCTURE: \n   - Start with a punchy hook.\n   - Use ## for subheadings.\n   - Use bullet points for readability.\n4. TONE: Friendly, helpful, and \"big brain energy.\" \n5. KEYWORDS: Naturally weave in terms like \"automation\", \"CEH\", or \"n8n\" or other technical terms where they fit.\n\nFORMATTING:\n- Use bold text for emphasis.\n- Keep paragraphs short (2-3 sentences max).\n- End with a \"tl;dr\" or a \"final vibes\" summary.\n- Don't Use Top Level Headings like # or ## (h1 and h2)\n\nNOTE: don't write on your own, just make provided content better.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        576,
+        0
+      ],
+      "id": "8616486d-0649-4653-ab38-fc17211544d6",
+      "name": "Content AI Agent1"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        864,
+        0
+      ],
+      "id": "19a9eb9c-b24f-4538-80f3-6163c24b97ec",
+      "name": "Markdown"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Title AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Title AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Content AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a post": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Title AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Content AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "04412ca2-594b-409c-ab8a-8527c7bdd116",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3a50395b3ad97e791d9560c02c38e34558c44b042e65f7a7158c32fd9a4c7379"
+  },
+  "id": "SvR_oTEM9KlojEyIHKL0O",
+  "tags": []
+}
