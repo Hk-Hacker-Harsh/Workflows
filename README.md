@@ -35,11 +35,17 @@ This repository contains my custom Make.com workflows for utility bots and AI ag
 [Blogger](https://whatsgoingon.harshkhandal.me/)
 
 <br>
-[ Instagram ](https://www.instagram.com/whats_.going_on/)
+
+[Instagram](https://www.instagram.com/whats_.going_on/)
+
 <Br>
-[LinkedIn](https://www.linkedin.com/company/whats-goingon)
+
+[LinkedIn](https://www.linkedin.com/company/whats-goingon/)
+
 <br>
+
 [Facebook](https://www.facebook.com/people/Whats-Going-On/61589833215074/)
+
 <br>
 
 
