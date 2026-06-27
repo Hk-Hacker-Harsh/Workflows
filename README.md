@@ -4,17 +4,15 @@ This repository conatains my Workflows for N8n and Make.com.
 
 This repository contains my custom n8n workflows for utility bots and AI agents.
 
-## 📂 Featured Workflows
-
-### Zippy - Unzip Telegram Bot
+## Zippy - Unzip Telegram Bot
 * **Purpose:** Instant .zip extraction via Telegram.
 * **Key Node:** Compression (Unzip).
 
-### Reflect AI - Reflect AI Telegram Bot
+## Reflect AI - Reflect AI Telegram Bot
 * **Purpose:** Socratic brainstorming agent using Llama 3.2.
 * **Key Node:** AI Agent + Postgres Memory.
 
-### Wordpress Blog Automation - Wordpress Blog Automation using Telegram
+## Wordpress Blog Automation - Wordpress Blog Automation using Telegram
 * **Purpose:** Blog Post writing agent using Llama 3.2 and post to Wordpress.
 * **Key Node:** AI Agent + Post On Wordpress + Telegram Bot.
 
@@ -40,6 +38,8 @@ This repository contains my custom Make.com workflows for utility bots and AI ag
 
 <br>
 
+
+---
 
 ![N8n Logo](/assets/n8n_logo.png)
 
