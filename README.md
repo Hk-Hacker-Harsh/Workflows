@@ -31,16 +31,15 @@ This repository contains my custom Make.com workflows for utility bots and AI ag
 * **Key Node:** AI Agent (Using HTTP Nodes)(Gemma and Flux) + Multiple Social Media + Telegram Nodes.
 * **Links:** 
 <br>
-[What's Going On - Blogger](https://whatsgoingon.harshkhandal.me/)
+[Blogger](https://whatsgoingon.harshkhandal.me/)
 <br>
-[What's Going On - Instagram](https://www.instagram.com/whats_.going_on/)
+[Instagram](https://www.instagram.com/whats_.going_on/)
 <Br>
-[What's Going On - LinkedIn](https://www.linkedin.com/company/whats-goingon/)
+[LinkedIn](https://www.linkedin.com/company/whats-goingon/)
 <br>
-[What's Going On - Facebook](https://www.facebook.com/people/Whats-Going-On/61589833215074/)
+[Facebook](https://www.facebook.com/people/Whats-Going-On/61589833215074/)
 <br>
-<br>
-![What's Going On Workflow](/What's%20Going%20On/What's-Going-On-Make.png)
+
 
 ---
 
