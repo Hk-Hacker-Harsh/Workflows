@@ -1,6 +1,6 @@
 This repository conatains my Workflows for N8n and Make.com.
 
-# 🚀 N8n Automation Vault
+# 🚀 N8n Automations Vault
 
 This repository contains my custom n8n workflows for utility bots and AI agents.
 
@@ -17,7 +17,7 @@ This repository contains my custom n8n workflows for utility bots and AI agents.
 * **Key Node:** AI Agent + Post On Wordpress + Telegram Bot.
 
 
-# 🚀 Make.com Automation Vault
+# 🚀 Make.com Automations Vault
 
 This repository contains my custom Make.com workflows for utility bots and AI agents.
 
