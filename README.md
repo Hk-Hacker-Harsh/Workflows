@@ -1,3 +1,5 @@
+This repository conatains my Workflows for N8n and Make.com.
+
 # 🚀 N8n Automation Vault
 
 This repository contains my custom n8n workflows for utility bots and AI agents.
@@ -17,6 +19,29 @@ This repository contains my custom n8n workflows for utility bots and AI agents.
 * **Key Node:** AI Agent + Post On Wordpress + Telegram Bot.
 
 ![N8n Logo](/assets/n8n_logo.png)
+
+
+
+# 🚀 Make.com Automation Vault
+
+This repository contains my custom Make.com workflows for utility bots and AI agents.
+
+## 📱 What's Going On - Omnichannel News Synthesis & Media Generation Automation Pipeline
+* **Purpose:** Create a Gen Z style post and News with Flux Image and Publish to Multiple Social Medias (Blogger, Instagram, Facebook). Also Creates Instagram reel Using Image.
+* **Key Node:** AI Agent (Using HTTP Nodes)(Gemma and Flux) + Multiple Social Media + Telegram Nodes.
+* **Links:** 
+<br>
+[What's Going On - Blogger](https://whatsgoingon.harshkhandal.me/)
+<br>
+[What's Going On - Instagram](https://www.instagram.com/whats_.going_on/)
+<Br>
+[What's Going On - LinkedIn](https://www.linkedin.com/company/whats-goingon/)
+<br>
+[What's Going On - Facebook](https://www.facebook.com/people/Whats-Going-On/61589833215074/)
+<br>
+<br>
+![What's Going On Workflow](/What's%20Going%20On/What's-Going-On-Make.png)
+
 ---
 
 ## 🛡️ Security
